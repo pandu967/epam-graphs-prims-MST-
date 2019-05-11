@@ -1,0 +1,78 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.*;
+
+public class Solution{
+
+    // Complete the prims function below.
+    static int prims(int n, int[][] edges, int start) {
+        boolean vis[] = new boolean[n+1];
+        int dis[] = new int[n+1];
+        for(int i=1;i<=n;i++)
+            dis[i]=Integer.MAX_VALUE; 
+        int grp[][] = new int[n+1][n+1];
+        for(int i=0;i<edges.length;i++){
+            grp[edges[i][0]][edges[i][1]]=edges[i][2];
+            grp[edges[i][1]][edges[i][0]]=edges[i][2];
+        }
+        int vertices=1;
+        dis[start]=0;
+        while(vertices<n){
+        int min=Integer.MAX_VALUE,min_ind=-1;
+        for(int i=1;i<=n;i++)
+        {
+            if(dis[i]<min  && vis[i]==false){
+                min=dis[i];
+                min_ind=i;
+            }
+        }
+        //System.out.println("min: "+min_ind);
+        vertices++;
+        vis[min_ind] = true;
+        for(int i=1;i<=n;i++){
+            if(grp[min_ind][i]!=0 && vis[i]!=true){
+                if(grp[min_ind][i]<dis[i])
+                    //grp[min_ind][i]=min;
+                    dis[i]=grp[min_ind][i];
+            }
+        }
+    }
+    int sum=0;
+    for(int i=1;i<=n;i++)
+        sum=sum+dis[i];
+    return sum;
+    }
+
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) throws IOException {
+      BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+
+        String[] nm = br.readLine().split(" ");
+
+        int n = Integer.parseInt(nm[0]);
+
+        int m = Integer.parseInt(nm[1]);
+
+        int[][] edges = new int[m][3];
+
+        for (int i = 0; i < m; i++) {
+            String[] edgesRowItems = br.readLine().split(" ");
+            //scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+
+            for (int j = 0; j < 3; j++) {
+                int edgesItem = Integer.parseInt(edgesRowItems[j]);
+                edges[i][j] = edgesItem;
+            }
+        }
+
+        int start = Integer.parseInt(br.readLine());
+       
+        System.out.print(prims(n, edges, start));
+    }
+}
